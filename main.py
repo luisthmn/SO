@@ -19,6 +19,7 @@ quantum = 2
 # Utilizamos el algoritmo de calendarización RoundRobin
 roundRobin = clases.roundRobin(quantum, procesos)
 roundRobin.tiempoPromedio()
+print("\n")
 
 # Utilizamos el algoritmo de calendarización Shortest Remaining Time First
 srtf = clases.SRTF(procesos)

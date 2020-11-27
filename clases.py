@@ -97,116 +97,108 @@ class roundRobin:
         total_tiemposEspera = 0
         total_tiemposRespuesta = 0
         print("Resultados algoritmos de calendarización Round-Robin\n")
-        print("Procesos\tTiempos de Burst\tTiempos de Espera\t\tTiempos de Respuesta") 
+        print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
         # Para cada proceso
         for i in range(len(self.procesos)):
             # Añadimos su tiempo de espera y de respuesta al tiempo total
-            total_tiemposEspera = total_tiemposEspera + tiemposEspera[i]  
-            total_tiemposRespuesta = total_tiemposRespuesta + tiemposRespuesta[i]  
-            print(str(i + 1) + "\t\t\t" + str(self.procesos[i].burst) + "\t\t\t\t\t" +  str(tiemposEspera[i]) + "\t\t\t\t\t\t" + str(tiemposRespuesta[i])) 
-        print("\nTiempo de espera promedio: \t\t" +   str(total_tiemposEspera /len(self.procesos)))
+            total_tiemposEspera += tiemposEspera[i]  
+            total_tiemposRespuesta += tiemposRespuesta[i]  
+            print(str(i + 1) + "\t\t\t\t\t" + str(self.procesos[i].burst) + "\t\t\t\t\t\t\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposRespuesta[i])) 
+        print("\nTiempo de espera promedio: \t\t\t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))  
 
     
-# Estructura de algoritmo de Shortest Remaining Time First
+# Estructura de algoritmo de indexest Remaining Time First
 class SRTF:
     def __init__(self, procesos):
         self.procesos = procesos
-
-    def tiempoEspera(self, tiemposEspera): 
-
+ 
+    def tiempoEspera(self, tiemposEspera):  
         cantProcesos = len(self.procesos)
-        rt = [0] * cantProcesos 
+        tiempoRestante = [0] * cantProcesos 
     
-        # Copy the burst time into rt[]  
+        # Copiamos los tiempos de ráfaga   
         for i in range(cantProcesos):  
-            rt[i] = self.procesos[i][1] 
-        complete = 0
-        t = 0
-        minm = 999999999
-        short = 0
-        check = False
+            tiempoRestante[i] = self.procesos[i].burst 
+
+        terminados = 0      # Procesos terminados
+        tiempoActual = 0    # Tiempo actual
+        minimo = 999999999  # Tiempo restante minimo 
+        index = 0           # Indice de proceso seleccionado
+        aux = False         # Variable auxiliar para
+                            # encontrar el proceso con
+                            # el tiempo restante mínimo
     
-        # Process until all processes gets  
-        # completed  
-        while (complete != n): 
+        # Ciclo principal del algoritmo
+        while (terminados != cantProcesos): 
             
-            # Find process with minimum remaining  
-            # time among the processes that  
-            # arrives till the current time` 
-            for j in range(n): 
-                if ((processes[j][2] <= t) and 
-                    (rt[j] < minm) and rt[j] > 0): 
-                    minm = rt[j] 
-                    short = j 
-                    check = True
-            if (check == False): 
-                t += 1
+            # Encontramos el proceso con el menor tiempo
+            # restante de los que han llegado hasta el 
+            # tiempo actual
+            for j in range(cantProcesos): 
+                if ((self.procesos[j].tiempoDeLlegada <= tiempoActual) and (tiempoRestante[j] < minimo) and tiempoRestante[j] > 0): 
+                    minimo = tiempoRestante[j] 
+                    index = j 
+                    aux = True
+            if (aux == False): 
+                tiempoActual += 1
                 continue
                 
-            # Reduce remaining time by one  
-            rt[short] -= 1
+            # Actualizamos el tiempo restante  
+            tiempoRestante[index] -= 1
     
-            # Update minimum  
-            minm = rt[short]  
-            if (minm == 0):  
-                minm = 999999999
+            # Actualizamos el tiempo restante minimo
+            minimo = tiempoRestante[index]  
+            if (minimo == 0):  
+                minimo = 999999999
     
-            # If a process gets completely  
-            # executed  
-            if (rt[short] == 0):  
+            # Si un proceso termina de ejecutarse 
+            if (tiempoRestante[index] == 0):  
     
-                # Increment complete  
-                complete += 1
-                check = False
+                # Aumentamos la cantidad de procesos completados  
+                terminados += 1
+                aux = False
+
+                # Definimos el tiempo de finalización del proceso actual
+                tiempoFin = tiempoActual + 1
     
-                # Find finish time of current  
-                # process  
-                fint = t + 1
+                # Calculamos el tiempo de espera
+                tiemposEspera[index] = (tiempoFin - self.procesos[index].burst - self.procesos[index].tiempoDeLlegada) 
     
-                # Calculate waiting time  
-                wt[short] = (fint - proc[short][1] -    
-                                    proc[short][2]) 
-    
-                if (wt[short] < 0): 
-                    wt[short] = 0
+                if (tiemposEspera[index] < 0): 
+                    tiemposEspera[index] = 0
             
-            # Increment time  
-            t += 1
-  
-    # Function to calculate turn around time  
-    def tiempoEspera(processes, n, wt, tat):  
-        
-        # Calculating turnaround time  
-        for i in range(n): 
-            tat[i] = processes[i][1] + wt[i]  
+            # Aumentamos el tiempo actual  
+            tiempoActual += 1
     
-    # Function to calculate average waiting  
-    # and turn-around times.  
-    def tiempoPromedio(processes, n):  
-        wt = [0] * n 
-        tat = [0] * n  
+    # Este método calcula los tiempos de respuesta 
+    # tiemposEspera   -> Lista con los tiempos de espera de los procesos 
+    # tiemposRespueta -> Lista con los tiempos de respuesta de los procesos  
+    def tiempoRespuesta(self, tiemposEspera, tiemposRespuesta):  
+        # Calculamos los tiempos de respuesta 
+        for i in range(len(self.procesos)): 
+            tiemposRespuesta[i] = self.procesos[i].burst + tiemposEspera[i]  
     
-        # Function to find waiting time  
-        # of all processes  
-        findWaitingTime(processes, n, wt)  
+    # Función principal del algoritmo, calculamos e imprimimo los tiempos de ejecución 
+    def tiempoPromedio(self):  
+        tiemposEspera = [0] * len(self.procesos) 
+        tiemposRespuesta = [0] * len(self.procesos)   
     
-        # Function to find turn around time 
-        # for all processes  
-        findTurnAroundTime(processes, n, wt, tat)  
+        # Calculamos los tiempos de espera 
+        self.tiempoEspera(tiemposEspera)  
+        # Calculamos los tiempos de respuesta  
+        self.tiempoRespuesta(tiemposEspera, tiemposRespuesta)  
     
-        # Display processes along with all details  
-        print("Processes    Burst Time     Waiting",  
-                        "Time     Turn-Around Time") 
-        total_wt = 0
-        total_tat = 0
-        for i in range(n): 
-    
-            total_wt = total_wt + wt[i]  
-            total_tat = total_tat + tat[i]  
-            print(" ", processes[i][0], "\t\t",  
-                    processes[i][1], "\t\t",  
-                    wt[i], "\t\t", tat[i]) 
-    
-        print("\nAverage waiting time = %.5f "%(total_wt /n) ) 
-        print("Average turn around time = ", total_tat / n)  
+        # Mostramos los resultados obtenidos 
+        total_tiemposEspera = 0 
+        total_tiemposRespuesta = 0  
+        print("Resultados algoritmos de calendarización indexest Remaining Time First\n")
+        print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
+        # Para cada proceso
+        for i in range(len(self.procesos)):
+            # Añadimos su tiempo de espera y de respuesta al tiempo total
+            total_tiemposEspera += tiemposEspera[i]  
+            total_tiemposRespuesta += tiemposRespuesta[i]  
+            print(str(i + 1) + "\t\t\t\t\t" + str(self.procesos[i].burst) + "\t\t\t\t\t\t\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposRespuesta[i])) 
+        print("\nTiempo de espera promedio: \t\t\t" +   str(total_tiemposEspera /len(self.procesos)))
+        print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))  
