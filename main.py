@@ -2,10 +2,15 @@ import numpy
 import metodos
 import clases
 
-cantidad = 4
-minBurst = 1
-maxBurst = 5
-maxTiempoLlegada = 4
+print("Proyecto final para la materia de Sistemas Operativos\n\n")
+
+# Solicitamos información al usuario
+cantidad = int(input("Cuantos procesos desea generar: "))
+minBurst = int(input("Tiempo de ráfaga mínimo posible para un proceso: "))
+maxBurst = int(input("Tiempo de ráfaga máximo posible para un proceso: "))
+maxTiempoLlegada = int(input("Máximo tiempo de llegada de un proceso: "))
+
+
 # Generamos nuestra lista de procesos
 procesos = metodos.generaProcesos(cantidad, minBurst, maxBurst, maxTiempoLlegada)
 

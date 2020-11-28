@@ -5,7 +5,6 @@ class proceso:
         self.identificador = identificador
         self.burst = burst
         self.tiempoDeLlegada = tiempoDeLlegada
-    completado = False
 
 
 # Estructura de algoritmo de calendarización Round Robin
@@ -103,8 +102,8 @@ class roundRobin:
             # Añadimos su tiempo de espera y de respuesta al tiempo total
             total_tiemposEspera += tiemposEspera[i]  
             total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i + 1) + "\t\t\t\t\t" + str(self.procesos[i].burst) + "\t\t\t\t\t\t\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposRespuesta[i])) 
-        print("\nTiempo de espera promedio: \t\t\t" +   str(total_tiemposEspera /len(self.procesos)))
+            print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+        print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))  
 
     
@@ -199,6 +198,6 @@ class SRTF:
             # Añadimos su tiempo de espera y de respuesta al tiempo total
             total_tiemposEspera += tiemposEspera[i]  
             total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i + 1) + "\t\t\t\t\t" + str(self.procesos[i].burst) + "\t\t\t\t\t\t\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t\t\t\t\t\t\t" + str(tiemposRespuesta[i])) 
-        print("\nTiempo de espera promedio: \t\t\t" +   str(total_tiemposEspera /len(self.procesos)))
-        print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))  
+            print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+        print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
+        print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos))) 
