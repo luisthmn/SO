@@ -95,7 +95,7 @@ class roundRobin:
         # Mostramos los resultados obtenidos 
         total_tiemposEspera = 0
         total_tiemposRespuesta = 0
-        print("Resultados algoritmos de calendarización Round-Robin\n")
+        print("Resultados de algoritmo de calendarización Round-Robin\n")
         print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
         # Para cada proceso
         for i in range(len(self.procesos)):
@@ -191,7 +191,7 @@ class SRTF:
         # Mostramos los resultados obtenidos 
         total_tiemposEspera = 0 
         total_tiemposRespuesta = 0  
-        print("Resultados algoritmos de calendarización indexest Remaining Time First\n")
+        print("Resultados de algoritmo de calendarización Shortest Remaining Time First\n")
         print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
         # Para cada proceso
         for i in range(len(self.procesos)):
