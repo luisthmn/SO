@@ -9,6 +9,7 @@ cantidad = int(input("Cuantos procesos desea generar: "))
 minBurst = int(input("Tiempo de ráfaga mínimo posible para un proceso: "))
 maxBurst = int(input("Tiempo de ráfaga máximo posible para un proceso: "))
 maxTiempoLlegada = int(input("Máximo tiempo de llegada de un proceso: "))
+quantum = int(input("Valor de quantum para el algoritmo de calendarización Round Robin: "))
 
 
 # Generamos nuestra lista de procesos
@@ -20,7 +21,6 @@ for elem in procesos:
     print("id: " + str(elem.identificador) + "\t\t" + " burst: " + str(elem.burst) + "\t\t" + "Tiempo de llegada: " + str(elem.tiempoDeLlegada))
 print("\n\n")
 
-quantum = 2
 # Utilizamos el algoritmo de calendarización RoundRobin
 roundRobin = clases.roundRobin(quantum, procesos)
 roundRobin.tiempoPromedio()
