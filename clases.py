@@ -109,7 +109,7 @@ class roundRobin:
         plot_data.append([total_tiemposRespuesta / len(self.procesos)])
 
     
-# Estructura de algoritmo de indexest Remaining Time First
+# Estructura de algoritmo de Shortest Remaining Time First
 class SRTF:
     def __init__(self, procesos):
         self.procesos = procesos
