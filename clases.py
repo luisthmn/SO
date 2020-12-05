@@ -102,7 +102,7 @@ class roundRobin:
             # Añadimos su tiempo de espera y de respuesta al tiempo total
             total_tiemposEspera += tiemposEspera[i]  
             total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+            print(str(i) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))
         plot_data.append([total_tiemposEspera / len(self.procesos)]) 
@@ -200,7 +200,7 @@ class SRTF:
             # Añadimos su tiempo de espera y de respuesta al tiempo total
             total_tiemposEspera += tiemposEspera[i]  
             total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+            print(str(i) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos))) 
         plot_data[0].append(total_tiemposEspera / len(self.procesos)) 
