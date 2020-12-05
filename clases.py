@@ -13,70 +13,92 @@ class roundRobin:
         self.quantum = quantum
         self.procesos = procesos
 
-    def tiempoEspera(self, tiemposEspera):
-        cantProcesos = len(self.procesos)
-        tiemposBurstRestante = [0] * cantProcesos
-        tiempoActual = 0 # Tiempo actual 
+    def recorrer(self, lista):
+        temp = lista[0]
+        for i in range(len(lista)-1):
+            lista[i] = lista[i+1]
+        lista[len(lista)-1] = temp
+        return lista
+    
+    def calendarizar(self):
+        diagrama = []
+        cola = []
+        tiemposBurst = [0] * len(self.procesos) 
+        tiempo = 0
+        procesosLlegados = 0
+        procesosTerminados = 0
+        procesosListos = 0
+        inicio = False
 
+        n = len(self.procesos)
 
-        # Copiamos los tiempos de ráfaga  
-        for i in range(cantProcesos):  
-            tiemposBurstRestante[i] = self.procesos[i].burst 
+        # Se ordenan los procesos por tiempo de llegada
+        self.procesos.sort(key=lambda x: x.tiempoDeLlegada)
+        # Se hace una copia de los tiempos de ráfaga
+        for i in range(n):
+            tiemposBurst[i] = self.procesos[i].burst
         
-    
-        # Este ciclo recorre los procesos
-        # utilizando el algoritmo Round Robin
-        # hasta que todos se encuentran finalizados
-        while(True): 
-            # Variable para saber si un proceso
-            # se encuentra en ejecución
-            finalizado = True
-    
-            # Para cada proceso
-            for i in range(cantProcesos): 
-                
-                # Si el tiempo de ráfaga es mayor a 0
-                # sigue el proceso 
-                if (tiemposBurstRestante[i] > 0) :
-                    
-                    # Entramos en proceso de ejecución
-                    finalizado = False 
-                    
-                    if (tiemposBurstRestante[i] > self.quantum) : 
-                    
-                        # Actualizamos el tiempo actual 
-                        tiempoActual += self.quantum  
-    
-                        # Actualizamos el tiempo de ráfaga restante
-                        tiemposBurstRestante[i] -= self.quantum  
-                    
-                    # Si el tiempo de ráfaga restante es menor
-                    # a quantum, el proceso solo necesita un ciclo
-                    # más para finalizar  
-                    else: 
-                    
-                        # Actualizamos el tiempo actual 
-                        tiempoActual += tiemposBurstRestante[i]  
-    
-                        # Actualizamos los tiempos de espera
-                        tiemposEspera[i] = tiempoActual - self.procesos[i].burst  
-    
-                        # Actualizamos el tiempo de ráfaga restante, es 0 ya que
-                        # el proceso está terminado
-                        tiemposBurstRestante[i] = 0
-                    
-            # Si todos los procesos han terminado dejamos de ejecutar el algoritmo  
-            if (finalizado == True): 
-                break
+        # Se sigue ejecutando mientras existan procesos sin terminar
+        while(procesosTerminados < n):
+            # Los procesos se agregan a la cola conforme llegan
+            for i in range(procesosLlegados, len(self.procesos)):
+                if tiempo >= self.procesos[i].tiempoDeLlegada:
+                   cola.append(self.procesos[i])
+                   procesosLlegados+=1
+                   procesosListos+=1
+
+            # En caso de que no haya procesos en la cola
+            if procesosListos < 1:
+                diagrama.append('')
+                tiempo+=1
+                continue
+
+            # Se recorre la cola a donde comienza
+            if inicio:
+                cola = self.recorrer(cola)
+
+            # Entra si el tiempo de ráfaga del primer elemento 
+            # de la cola es mayor a cero
+            if cola[0].burst > 0:
+                # En el caso que el tiempo de ráfaga sea mayor al quantum
+                if cola[0].burst > self.quantum:
+                    for i in range(tiempo, tiempo+self.quantum):
+                        diagrama.append(cola[0].identificador)
+                    tiempo+=self.quantum
+                    cola[0].burst-=self.quantum
+                # Si es menor o igual al quantum
+                else:
+                    for i in range(tiempo, tiempo+cola[0].burst):
+                        diagrama.append(cola[0].identificador)
+                    tiempo+=cola[0].burst
+                    cola[0].burst = 0
+                    # Se registra el tiempo en que se completan
+                    for i in self.procesos:
+                        if i.identificador == cola[0].identificador:
+                            i.tiempoCompletado = tiempo
+                    procesosTerminados+=1
+                    procesosListos-=1
+                inicio = True
+
+        # Se copian los tiempos de ráfaga de vuelta
+        for i in range(n):
+            self.procesos[i].burst = tiemposBurst[i]
+
+    # Este método calcula los tiempos de espera
+    # tiemposEspera   -> Lista con los tiempos de espera de los procesos 
+    # tiemposRespueta -> Lista con los tiempos de respuesta de los procesos
+    def tiempoEspera(self, tiemposRespuesta, tiemposEspera):
+        # Calculamos los tiempos de respuesta
+        for i in range(len(self.procesos)): 
+            tiemposEspera[i] = tiemposRespuesta[i] - self.procesos[i].burst
 
     
     # Este método calcula los tiempos de respuesta 
-    # tiemposEspera   -> Lista con los tiempos de espera de los procesos 
     # tiemposRespueta -> Lista con los tiempos de respuesta de los procesos
-    def tiempoRespuesta(self, tiemposEspera, tiemposRespuesta):
+    def tiempoRespuesta(self, tiemposRespuesta):
         # Calculamos los tiempos de respuesta
         for i in range(len(self.procesos)): 
-            tiemposRespuesta[i] = self.procesos[i].burst + tiemposEspera[i] 
+            tiemposRespuesta[i] = self.procesos[i].tiempoCompletado - self.procesos[i].tiempoDeLlegada
 
 
     # Función principal del algoritmo, calculamos e imprimimo los tiempos de ejecución
@@ -86,23 +108,23 @@ class roundRobin:
         tiemposEspera = [0] * len(self.procesos) 
         tiemposRespuesta = [0] * len(self.procesos)  
     
-        # Calculamos los tiempos de espera 
-        self.tiempoEspera(tiemposEspera)  
-    
         # Calculamos los tiempos de respuesta  
-        self.tiempoRespuesta(tiemposEspera, tiemposRespuesta)  
+        self.tiempoRespuesta(tiemposRespuesta) 
+
+        # Calculamos los tiempos de espera 
+        self.tiempoEspera(tiemposRespuesta, tiemposEspera)   
     
         # Mostramos los resultados obtenidos 
         total_tiemposEspera = 0
         total_tiemposRespuesta = 0
-        print("Resultados de algoritmo de calendarización Round-Robin\n")
-        print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
+        print("Resultados algoritmos de calendarización Round-Robin\n")
+        print("Procesos IDs\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta")  
         # Para cada proceso
         for i in range(len(self.procesos)):
             # Añadimos su tiempo de espera y de respuesta al tiempo total
-            total_tiemposEspera += tiemposEspera[i]  
-            total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+            total_tiemposEspera = total_tiemposEspera + tiemposEspera[i]  
+            total_tiemposRespuesta = total_tiemposRespuesta + tiemposRespuesta[i]  
+            print(str(self.procesos[i].identificador) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))
         plot_data.append([total_tiemposEspera / len(self.procesos)]) 
@@ -194,13 +216,13 @@ class SRTF:
         total_tiemposEspera = 0 
         total_tiemposRespuesta = 0  
         print("Resultados de algoritmo de calendarización Shortest Remaining Time First\n")
-        print("Procesos\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
+        print("Procesos IDs\tTiempos de Burst\tTiempos de Llegada\tTiempos de Espera\t\tTiempos de Respuesta") 
         # Para cada proceso
         for i in range(len(self.procesos)):
             # Añadimos su tiempo de espera y de respuesta al tiempo total
             total_tiemposEspera += tiemposEspera[i]  
             total_tiemposRespuesta += tiemposRespuesta[i]  
-            print(str(i) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
+            print(str(self.procesos[i].identificador) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos))) 
         plot_data[0].append(total_tiemposEspera / len(self.procesos)) 
