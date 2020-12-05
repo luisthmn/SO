@@ -43,6 +43,7 @@ class roundRobin:
             tiemposBurst[i] = self.procesos[i].burst
         
         # Se sigue ejecutando mientras existan procesos sin terminar
+        # (Ciclo principal del algoritmo)
         while(procesosTerminados < n):
             # Los procesos se agregan a la cola conforme llegan
             for i in range(procesosLlegados, len(self.procesos)):
@@ -83,10 +84,11 @@ class roundRobin:
                     procesosTerminados+=1
                     procesosListos-=1
                 inicio = True
-
         # Se copian los tiempos de ráfaga de vuelta
         for i in range(n):
             self.procesos[i].burst = tiemposBurst[i]
+        
+        print(diagrama)
 
     # Este método calcula los tiempos de espera
     # tiemposEspera   -> Lista con los tiempos de espera de los procesos 
