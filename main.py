@@ -34,6 +34,7 @@ print("\n")
 srtf = clases.SRTF(procesos)
 srtf.tiempoPromedio(plot_data)
 
+# Generamos las gráficas
 width =0.3
 plt.bar(np.arange(len(plot_data[0])), plot_data[0], width=width)
 plt.bar(np.arange(len(plot_data[1]))+ width, plot_data[1], width=width)
