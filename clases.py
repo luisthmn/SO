@@ -88,6 +88,7 @@ class roundRobin:
         for i in range(n):
             self.procesos[i].burst = tiemposBurst[i]
         
+        self.procesos.sort(key=lambda x: x.identificador)
         print(diagrama)
 
     # Este método calcula los tiempos de espera
