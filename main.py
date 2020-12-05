@@ -1,4 +1,5 @@
-import numpy
+import matplotlib.pyplot as plt 
+import numpy as np
 import metodos
 import clases
 
@@ -21,11 +22,22 @@ for elem in procesos:
     print("id: " + str(elem.identificador) + "\t\t" + " burst: " + str(elem.burst) + "\t\t" + "Tiempo de llegada: " + str(elem.tiempoDeLlegada))
 print("\n\n")
 
+# Datos para realizar las gráficas
+plot_data = [] * 2
+
 # Utilizamos el algoritmo de calendarización RoundRobin
 roundRobin = clases.roundRobin(quantum, procesos)
-roundRobin.tiempoPromedio()
+roundRobin.tiempoPromedio(plot_data)
 print("\n")
 
 # Utilizamos el algoritmo de calendarización Shortest Remaining Time First
 srtf = clases.SRTF(procesos)
-srtf.tiempoPromedio()
+srtf.tiempoPromedio(plot_data)
+
+width =0.3
+plt.bar(np.arange(len(plot_data[0])), plot_data[0], width=width)
+plt.bar(np.arange(len(plot_data[1]))+ width, plot_data[1], width=width)
+plt.gca().legend(('Tiempo de espera','Tiempo de respuesta'))
+plt.xlabel("Round Robin                                                 SRTF")
+plt.title("Resultados de los algoritmos")
+plt.show()

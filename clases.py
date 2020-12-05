@@ -80,7 +80,7 @@ class roundRobin:
 
 
     # Función principal del algoritmo, calculamos e imprimimo los tiempos de ejecución
-    def tiempoPromedio(self):
+    def tiempoPromedio(self, plot_data):
 
         # Establecemos los tiempos de Espera y de Respuesta actuales
         tiemposEspera = [0] * len(self.procesos) 
@@ -104,7 +104,9 @@ class roundRobin:
             total_tiemposRespuesta += tiemposRespuesta[i]  
             print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
-        print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))  
+        print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos)))
+        plot_data.append([total_tiemposEspera / len(self.procesos)]) 
+        plot_data.append([total_tiemposRespuesta / len(self.procesos)])
 
     
 # Estructura de algoritmo de indexest Remaining Time First
@@ -179,7 +181,7 @@ class SRTF:
             tiemposRespuesta[i] = self.procesos[i].burst + tiemposEspera[i]  
     
     # Función principal del algoritmo, calculamos e imprimimo los tiempos de ejecución 
-    def tiempoPromedio(self):  
+    def tiempoPromedio(self, plot_data):  
         tiemposEspera = [0] * len(self.procesos) 
         tiemposRespuesta = [0] * len(self.procesos)   
     
@@ -201,3 +203,5 @@ class SRTF:
             print(str(i + 1) + "\t\t" + str(self.procesos[i].burst) + "\t\t\t" +  str(self.procesos[i].tiempoDeLlegada) + "\t\t\t" + str(tiemposEspera[i]) + "\t\t\t\t" + str(tiemposRespuesta[i])) 
         print("\nTiempo de espera promedio: \t" +   str(total_tiemposEspera /len(self.procesos)))
         print("Tiempo de respuesta promedio: \t"+ str(total_tiemposRespuesta / len(self.procesos))) 
+        plot_data[0].append(total_tiemposEspera / len(self.procesos)) 
+        plot_data[1].append(total_tiemposRespuesta / len(self.procesos)) 
