@@ -13,6 +13,10 @@ class roundRobin:
         self.quantum = quantum
         self.procesos = procesos
 
+    # Método que pasa el primer elemento de una lista al 
+    # final de la misma.
+    # lista -> Lista de la que queremos cambiar los elementos
+    # return -> La lista con los indices transformados
     def recorrer(self, lista):
         temp = lista[0]
         for i in range(len(lista)-1):
@@ -107,7 +111,10 @@ class roundRobin:
         # Establecemos los tiempos de Espera y de Respuesta actuales
         tiemposEspera = [0] * len(self.procesos) 
         tiemposRespuesta = [0] * len(self.procesos)  
-    
+
+        #Calendarizamos los procesos
+        self.calendarizar()
+
         # Calculamos los tiempos de respuesta  
         self.tiempoRespuesta(tiemposRespuesta) 
 

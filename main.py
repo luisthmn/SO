@@ -27,7 +27,6 @@ plot_data = [] * 2
 
 # Utilizamos el algoritmo de calendarización RoundRobin
 roundRobin = clases.roundRobin(quantum, procesos)
-roundRobin.calendarizar()
 roundRobin.tiempoPromedio(plot_data)
 print("\n")
 
