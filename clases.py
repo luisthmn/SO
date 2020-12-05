@@ -56,7 +56,7 @@ class roundRobin:
                     else: 
                     
                         # Actualizamos el tiempo actual 
-                        tiempoActual = tiempoActual + tiemposBurstRestante[i]  
+                        tiempoActual += tiemposBurstRestante[i]  
     
                         # Actualizamos los tiempos de espera
                         tiemposEspera[i] = tiempoActual - self.procesos[i].burst  
